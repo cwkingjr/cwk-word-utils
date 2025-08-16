@@ -19,14 +19,117 @@ The tests for these functions show how to create and use a curried function.
 
 ### Sentiment (sentiment.py)
 
-- extract_sentiment_polarity
+- get_sentiment_polarity
 
 This function simply uses the `textblob` module to generate the polarity `[-1,1]` of the passed in text content.
 
-## Docs
-
-Please just see the tests in this repo for examples of how to use these functions.
-
 ## Tests
 
-So far I'm trying to include tests for these modules that show how to use them with a `Pandas Dataframe`.
+Sometimes looking at the tests in the tests directory will help with understanding as the asserts in the tests show the expected outputs for various calls.
+
+## Installation
+
+This library is not published on PyPI, so to install it as a dependency, add this to your pyproject.toml:
+
+```toml
+"cwk-word-utils @ git+https://github.com/cwkingjr/cwk-word-utils.git@main",
+```
+
+# Examples
+
+## Sentiment Polarity (returns range of -1 to 1)
+
+```python
+from cwk_word_utils.sentiment import get_sentiment_polarity
+
+import pandas as pd
+
+# simple call
+text = "I love programming! It's so much fun."
+sentiment_polarity = get_sentiment_polarity(text)
+print(sentiment_polarity)
+
+# applying to dataframe
+df = pd.DataFrame(
+    {
+        "description": [
+            "I love programming! It's so much fun.",
+            "Programming is so hard and frustrating at times.",
+        ]
+    }
+)
+
+df["sentiment"] = df["description"].apply(get_sentiment_polarity)
+
+print(df)
+```
+
+## Tag Terms
+
+```python
+from cwk_word_utils.term_tag_models import Tag, Terms, TagTerms
+from cwk_word_utils.term_tagging import (
+    get_content_tags,
+    get_content_tags_return_delimited,
+)
+
+import pandas as pd
+
+## my data
+my_content = "This is a letter of claim regarding an accident."
+my_tag_terms = [
+    TagTerms(
+        tag=Tag(tag="claims"),
+        terms=Terms(
+            terms=["insurance", "letter of claim", "documentation for claims"],
+        ),
+    ),
+    TagTerms(
+        tag=Tag(tag="injury"),
+        terms=Terms(terms=["injury", "accident", "incident"]),
+    ),
+]
+
+## simple calls
+
+# returns Python list of tag strs
+result_list = get_content_tags(tag_terms=my_tag_terms, content=my_content)
+
+# returns pipe "|" (default) delimited str of tag strs
+result_str = get_content_tags_return_delimited(tag_terms=my_tag_terms, content=my_content)
+
+# returns a colon delimited str of tag strs
+result_str = get_content_tags_return_delimited(tag_terms=my_tag_terms, content=my_content, delimiter=":")
+
+## currying
+
+# creates a curried function that includes the tag_terms assignment
+get_tags_curried = get_content_tags(tag_terms=my_tag_terms)
+
+# returns Python list of tag strs
+result_list = get_tags_curried(content=my_content)
+
+## dataframe calls
+
+# applying to dataframe
+my_df_data = {
+    "text_column": [
+        "This is a letter of claim regarding an accident.",
+        "No relevant terms here.",
+        "An incident occurred leading to injury.",
+    ]
+}
+
+df = pd.DataFrame(my_df_data)
+
+# non-curried call
+df["tags"] = df["text_column"].apply(
+    lambda x: get_content_tags(tag_terms=my_tag_terms, content=x)
+    )
+
+# curried call
+# create curried function
+get_tags = get_content_tags(tag_terms=my_tag_terms)
+# apply curried function
+df["tags"] = df["text_column"].apply(lambda x: get_tags(content=x))
+```

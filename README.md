@@ -23,6 +23,12 @@ The tests for these functions show how to create and use a curried function.
 
 This function simply uses the `textblob` module to generate the polarity `[-1,1]` of the passed in text content.
 
+### Word Count
+
+- get_word_count
+
+This function uses the readme example from `toolz` to stem and get the frequencies of words in the provided text.
+
 ## Tests
 
 Sometimes looking at the tests in the tests directory will help with understanding as the asserts in the tests show the expected outputs for various calls.
@@ -132,4 +138,14 @@ df["tags"] = df["text_column"].apply(
 get_tags = get_content_tags(tag_terms=my_tag_terms)
 # apply curried function
 df["tags"] = df["text_column"].apply(lambda x: get_tags(content=x))
+```
+
+## Word Count
+
+```python
+from cwk_word_utils.word_count import get_word_count
+
+text = "This cat jumped over this other cat!"
+result = get_word_count(text)
+#  {"this": 2, "cat": 2, "jumped": 1, "over": 1, "other": 1}
 ```

@@ -16,7 +16,7 @@ class Tag(BaseModel):
         return f"Tag: {self.tag}"
 
     def __repr__(self):
-        return f"Tag(tag={self.value!r})"
+        return f"Tag(tag={self.tag!r})"
 
 
 class Terms(BaseModel):

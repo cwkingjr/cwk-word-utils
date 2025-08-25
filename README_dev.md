@@ -1,6 +1,7 @@
 # typing checks
 
-ty check # can't install in venv just yet due to no version error
+ty check # can't install in venv just yet due to no-version-info error
+
 just typing
 
 # linting checks
@@ -15,7 +16,7 @@ just test
 
 just spacy
 
-# all - almost
+# all (almost)
 
 just add
 

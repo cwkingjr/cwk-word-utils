@@ -1,17 +1,24 @@
 # typing checks
 
-ty check
+ty check # can't install in venv just yet due to no version error
+just typing
 
 # linting checks
 
-ruff check --fix
+just lint
 
 # running tests
 
-uv run pytest
-uv run coverage run -m pytest
+just test
 
-# getting coverage reports via command line and in web page
+# spacy module validate
 
-uv run coverage report -m
-uv run coverage html
+just spacy
+
+# all - almost
+
+just add
+
+# open coverage html report
+
+open htmlcov/index.html

@@ -1,5 +1,5 @@
+from cwk_word_utils.term_tag_models import Tag, Terms, TagTerms
 import pytest
-from cwk_word_utils.term_tag_models import Tag, Terms, TagTerms, tag_terms
 
 
 def test_tag_class():
@@ -9,11 +9,21 @@ def test_tag_class():
     assert repr(tag) == "Tag(tag='injury')"
 
 
+def test_tag_not_str():
+    with pytest.raises(ValueError):
+        Tag(tag=42)
+
+
 def test_terms_class():
     terms = Terms(terms=["injury", "accident", "incident"])
     assert type(terms) == Terms
     assert str(terms) == "Terms: ['injury', 'accident', 'incident']"
     assert repr(terms) == "Terms(terms=['injury', 'accident', 'incident'])"
+
+
+def test_terms_not_str_list():
+    with pytest.raises(ValueError):
+        Terms(terms=[2, 3, 4])
 
 
 def test_tag_terms_class():
@@ -30,14 +40,3 @@ def test_tag_terms_class():
         repr(tag_terms)
         == "TagTerms(tag=Tag(tag='injury'), terms=Terms(terms=['injury', 'accident', 'incident']))"
     )
-
-
-def test_tag_terms():
-    my_content = "This is a letter of claim regarding an accident."
-    my_tag_terms = [
-        TagTerms(
-            tag=Tag(tag="injury"), terms=Terms(terms=["injury", "accident", "incident"])
-        )
-    ]
-    tags = tag_terms(tag_terms=my_tag_terms, content=my_content)
-    assert tags == "tags"

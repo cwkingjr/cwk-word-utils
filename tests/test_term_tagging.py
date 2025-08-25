@@ -1,6 +1,7 @@
 import pytest
 from cwk_word_utils.term_tag_models import Tag, Terms, TagTerms
 from cwk_word_utils.term_tagging import (
+    create_tag_terms,
     get_content_tags,
     get_content_tags_return_delimited,
 )
@@ -38,6 +39,20 @@ def dataframe_data():
         ]
     }
     return DATAFRAME_DATA
+
+
+def test_create_tag_terms():
+    my_tag_str = "mytest"
+    my_terms_str_list = ["one", "two", "three"]
+    my_tagterms_instance = create_tag_terms(
+        tag_str=my_tag_str, terms_str_list=my_terms_str_list
+    )
+    assert (
+        str(type(my_tagterms_instance))
+        == "<class 'cwk_word_utils.term_tag_models.TagTerms'>"
+    )
+    assert my_tagterms_instance.tag.tag == my_tag_str
+    assert my_tagterms_instance.terms.terms == my_terms_str_list
 
 
 def test_get_content_tags(content_str, tag_terms_list):

@@ -1,11 +1,13 @@
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import spacy
+from toolz import curry
 
 # https://www.nltk.org/data.html
 
 
-def remove_stopwords_nltk(text, nltk_corpus_language="english") -> list:
+@curry
+def remove_stopwords_nltk(string_of_words, nltk_corpus_language="english") -> list:
     """Removes stopwords using nltk stopwords and word_tokenize.
 
     Requires that `nltk` corpus `stopwords` and `punkt` have been previously
@@ -26,7 +28,7 @@ def remove_stopwords_nltk(text, nltk_corpus_language="english") -> list:
 
     # Get English stopwords and tokenize
     stop_words = set(stopwords.words("english"))
-    tokens = word_tokenize(text.lower())
+    tokens = word_tokenize(string_of_words.lower())
 
     # Remove stopwords
     filtered_tokens = [word for word in tokens if word not in stop_words]
@@ -34,23 +36,15 @@ def remove_stopwords_nltk(text, nltk_corpus_language="english") -> list:
     return filtered_tokens
 
 
-def remove_stopwords_spacy(text) -> list:
+@curry
+def remove_stopwords_spacy(string_of_words) -> list:
     """Removed stop words using spacy nlp.
 
     Loads spacy en_core_web_sm, gets tokens from text via spacy nlp, and filters
     out stop words.
-
-    Expects `en_core_web_sm` to be previously downloaded to your system with:
-    `python3 -m spacy download en_core_web_sm`
-
-    If you have only ever use `uv`, you can accomplish this with these commands:
-
-    - `uv python install`
-    - `uv pip install pip spacy`
-    - `python3 -m spacy download en_core_web_sm`
     """
     nlp = spacy.load("en_core_web_sm")
-    doc = nlp(text)
+    doc = nlp(string_of_words)
 
     filtered_words = [token.text for token in doc if not token.is_stop]
     return filtered_words

@@ -16,7 +16,7 @@ class Tag(BaseModel):
         return f"Tag: {self.tag}"
 
     def __repr__(self):
-        return f"Tag(tag={self.value!r})"
+        return f"Tag(tag={self.tag!r})"
 
 
 class Terms(BaseModel):
@@ -45,13 +45,3 @@ class TagTerms(BaseModel):
 
     def __repr__(self):
         return f"TagTerms(tag={self.tag!r}, terms={self.terms!r})"
-
-
-def tag_terms(tag_terms: list[TagTerms], content: str) -> list[Tag]:
-    """Tag terms in the content based on the provided tag_terms list."""
-    tags = set()
-    for tag_term in tag_terms:
-        for term in tag_term.terms:
-            if term in content:
-                tags.add(tag_term.tag)
-    return [tags]

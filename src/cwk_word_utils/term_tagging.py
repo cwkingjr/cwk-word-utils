@@ -2,7 +2,12 @@
 
 from toolz import curry
 
-from cwk_word_utils.term_tag_models import TagTerms
+from cwk_word_utils.term_tag_models import Tag, Terms, TagTerms
+
+
+def create_tag_terms(tag_str: str, terms_str_list: list[str]) -> TagTerms:
+    """Convenience function to create an instance of the class hierarchy."""
+    return TagTerms(tag=Tag(tag=tag_str), terms=Terms(terms=terms_str_list))
 
 
 @curry
@@ -22,7 +27,10 @@ def get_content_tags_return_delimited(
     content: str,
     delimiter: str = "|",
 ) -> str:
-    """Tag terms in the content and return tag strs as a delimited string."""
+    """Tag terms in the content and return tag strs as a delimited string.
+
+    Delimiter must be one of "|", ",", ";", ":", " ".
+    """
     if delimiter not in ["|", ",", ";", ":", " "]:
         msg = "Delimiter must be one of '|', ',', ';', ':', or ' '"
         raise ValueError(msg)
